@@ -1,0 +1,17 @@
+[
+	
+		{
+			"PID" : "0x5200",
+			"VID" : "0x13fe",
+			"Device" : "Patriot XT Flash",
+			"Speed" : "0x4"
+		},
+		
+		{
+			"PID" : "0x1666",
+			"VID" : "0x951",
+			"Device" : "DataTraveler G4",
+			"Speed" : "0x4"
+		}
+		
+]
