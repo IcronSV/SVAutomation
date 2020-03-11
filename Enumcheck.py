@@ -1,11 +1,14 @@
 #This script was written by Brendan Murray on 11/03/2020 for Icron Technologies SV automation project
 #This script takes an input from user or master host and returns a list corresponding to the csv inputted devices with values
 # 0 for failed enum, 1 for pass, 2 for incorrect enum and 3 if the input name was not valid
-#Commented out code worked when all inputs were valid
+#There is a known bug with pyUSB which throws exceptions when deleting instances of the usb class.
+#however these do not affect the program functionality and are unavoidable to my knowledge when using pyUSB.
+
+#Commented out code works when all inputs are valid
 import json
 import usb.core
 
-#initialize our lists
+#initialize certain variables
 PID = []
 VID = []
 result = []
