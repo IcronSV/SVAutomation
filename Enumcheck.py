@@ -21,6 +21,7 @@ devstr = input('Input the device names exactly as listed in the .json file seper
 #split the input string as if it was a .csv file which is likely how it will be done in the future
 devlst = devstr.split(',')
 
+#MODULE 1 replacement (no error check)
 """for dev in devlst:
     #iterate through each entry in the data (potential to be optimized once the json structure is finalized)
     for x in data:
@@ -31,10 +32,12 @@ devlst = devstr.split(',')
             break
 del dev"""
 
+#MODULE 1
+#Creating a "could not lookup" value for the PID and VID that will be used when it can't be found in the json
 while len(PID) < len(devlst):
-    PID.append('4')
-    VID.append('4')
-
+    PID.append('3')
+    VID.append('3')
+#Loop to lookup the PID and VID of our devices
 while True:
     for x in data:
         if x['Device']==devlst[i]:
@@ -45,6 +48,7 @@ while True:
     if i > len(devlst)-1:
         break
 
+#MODULE 2 Replacement (no error check)
 """for i in (0, len(PID)-1):
     conndev = usb.core.find(idVendor=int(VID[i], 16), idProduct=int(PID[i], 16))
     if conndev == None:
@@ -63,15 +67,22 @@ while True:
                 break
 """
 
+#Resetting our iterator i
 i=0
+#Loop to fill our result list with the correct values MODULE 2
 while True:
-    if PID[i] == '4' and VID[i] == '4':
+    #If the PID and VID are still set to their "could not lookup" error values, set that as the result
+    if PID[i] == '3' and VID[i] == '3':
         result.append(3)
+        #this block incrememnts our iterator and checks if we should break from the loop (if we have filled the results)
         i+=1
         if len(result) == len(devlst):
             break
         continue
+    #Since we were able to lookup the PID and VID, we use it to try and find the device through pyUSB
+    #This function would only take the PID and VID as integers, not their hex strings
     conndev = usb.core.find(idVendor=int(VID[i], 16), idProduct=int(PID[i], 16))
+    #If we did not find the device the function returns None, which we fill a 0 into result for
     if conndev == None:
         result.append(0)
         del conndev
@@ -79,6 +90,8 @@ while True:
         if len(result) == len(devlst):
             break
         continue
+    #If the result is not none, it found a device. We check its speed against the JSON table
+    #If it is the correct speed, write 1 to the results. If it is incorrect write 2 to the results
     if conndev != None:
         for x in data:
             if hex(conndev.speed) == x['Speed']:
@@ -97,5 +110,5 @@ while True:
     i+=1
     if len(result) == len(devlst):
         break
-
+#Finally, print the result, for ease of testing
 print(result)
